@@ -58,7 +58,7 @@ async function reset(){
   
   const asyncGetCall = async () => {
     try {
-      const response = await fetch('https://c582-102-89-44-199.eu.ngrok.io/beta/auth/validateForgotPassword', {
+      const response = await fetch('https://live.giftcardpays.com/beta/auth/validateForgotPassword', {
         method: 'POST',
         body: new URLSearchParams({
           token: token,
