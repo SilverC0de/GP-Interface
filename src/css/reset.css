@@ -12,6 +12,23 @@
     margin-right: auto;
     width: 40%;
   }
+  .error {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgb(234, 72, 72);
+    text-align: center;
+    padding: 8px;
+  }
+  .success {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgb(72, 234, 145);
+    text-align: center;
+    padding: 8px;
+  }
+
  .cardStyle {
     width: 500px;
     border-color: white;

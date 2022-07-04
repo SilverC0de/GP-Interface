@@ -1,12 +1,17 @@
-var password = document.getElementById("password")
-  , confirm_password = document.getElementById("confirmPassword");
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
 
-document.getElementById('signupLogo').src = "https://s3-us-west-2.amazonaws.com/shipsy-public-assets/shipsy/SHIPSY_LOGO_BIRD_BLUE.png";
-enableSubmitButton();
+var token = params.token;
+var password = document.getElementById("password");
+var confirm_password = document.getElementById("confirmPassword");
+var errorMessage = document.getElementById('error');
+var successMessage = document.getElementById('success');
+
 
 function validatePassword() {
   if(password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Passwords Don't Match");
+    confirm_password.setCustomValidity("Passwords does not Match");
     return false;
   } else {
     confirm_password.setCustomValidity('');
@@ -27,8 +32,9 @@ function disableSubmitButton() {
   document.getElementById('loader').style.display = 'unset';
 }
 
-function validateSignupForm() {
-  var form = document.getElementById('signupForm');
+
+function validateResetForm() {
+  var form = document.getElementById('resetForm');
   
   for(var i=0; i < form.elements.length; i++){
       if(form.elements[i].value === '' && form.elements[i].hasAttribute('required')){
@@ -41,27 +47,41 @@ function validateSignupForm() {
     return false;
   }
   
-  onSignup();
+  reset();
 }
 
-function onSignup() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    
-    disableSubmitButton();
-    
-    if (this.readyState == 4 && this.status == 200) {
-      enableSubmitButton();
-    }
-    else {
-      console.log('AJAX call failed!');
-      setTimeout(function(){
-        enableSubmitButton();
-      }, 1000);
-    }
-    
-  };
+
+async function reset(){
+  errorMessage.innerText = '';
+  successMessage.innerText = '';
+  disableSubmitButton();
   
-  xhttp.open("GET", "ajax_info.txt", true);
-  xhttp.send();
+  const asyncGetCall = async () => {
+    try {
+      const response = await fetch('https://c582-102-89-44-199.eu.ngrok.io/beta/auth/validateForgotPassword', {
+        method: 'POST',
+        body: new URLSearchParams({
+          token: token,
+          password: password.value
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+      });
+      const data = await response.json();
+        enableSubmitButton();
+
+        if(response.ok) {
+          successMessage.innerHTML = data.message;
+        } else {
+          errorMessage.innerText = data.message;
+        }
+    } catch(error) {
+        enableSubmitButton();
+    } 
+  }
+
+  asyncGetCall()
 }
+
+enableSubmitButton()
