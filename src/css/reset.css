@@ -30,7 +30,7 @@
   }
 
  .cardStyle {
-    width: 500px;
+    width: auto;
     border-color: white;
     background: #fff;
     padding: 36px 0;
